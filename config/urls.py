@@ -18,5 +18,5 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('', include('myinfo_integration.urls')),
+    path('', include('myinfo_api.urls')),
 ]

@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 
-app_name = 'myinfo_integration'
+app_name = 'myinfo_api'
 
 urlpatterns = [
     path('auth/', views.MyInfoAuthView.as_view(), name='auth'),

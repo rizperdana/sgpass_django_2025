@@ -14,7 +14,7 @@ class MyInfoTests(TestCase):
     @patch('myinfo.client.MyInfoPersonalClientV4.get_authorise_url')
     def test_auth_create_url(self, mock_auth_url):
         mock_auth_url.return_value = 'https://localhost.com/auth'
-        res = self.client.get(reverse('myinfo_integration:auth'))
+        res = self.client.get(reverse('myinfo_api:auth'))
         self.assertEqual(res.status_code, 200)
         self.assertIn('auth_url', res.data)
         self.assertEqual(res.data['auth_url'], 'https://localhost.com/auth')
@@ -30,29 +30,29 @@ class MyInfoTests(TestCase):
         ses = self.client.session
         ses['myinfo_oauth_state'] = 'test_state'
         ses.save()
-        
+
         res = self.client.get(
-            reverse('myinfo_integration:callback'),
+            reverse('myinfo_api:callback'),
             {'code': 'test_code'}
         )
-        
+
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data['name']['value'], 'ABNK Tester')
-    
+
     def test_callback_no_code(self):
-        res = self.client.get(reverse('myinfo_integration:callback'))
+        res = self.client.get(reverse('myinfo_api:callback'))
         self.assertEqual(res.status_code, 400)
         self.assertEqual(res.data['error'], 'Auth code is required')
 
     def test_callback_session_missing(self):
         res = self.client.get(
-            reverse('myinfo_integration:callback'),
+            reverse('myinfo_api:callback'),
             {'code': 'test_code'}
         )
 
         self.assertEqual(res.status_code, 400)
         self.assertEqual(res.data['error'], 'Invalid session')
-    
+
     @patch('myinfo.client.MyInfoPersonalClientV4.retrieve_resource')
     def test_callback_auth_code_wrong(self, mock_retrieve):
         mock_retrieve.side_effect = Exception("Invalid auth code")
@@ -60,7 +60,7 @@ class MyInfoTests(TestCase):
         ses['myinfo_oauth_state'] = 'test_state'
         ses.save()
         res = self.client.get(
-            reverse('myinfo_integration:callback'),
+            reverse('myinfo_api:callback'),
             {'code': 'invalid_code'}
         )
 
