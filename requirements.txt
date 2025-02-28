@@ -10,3 +10,6 @@ jwcrypto==1.5.5
 # Testing
 responses==0.23.3
 pytest==8.1.1
+
+# DRF to adjust with django 3.*
+djangorestframework==3.14.0
